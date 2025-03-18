@@ -1,0 +1,30 @@
+{
+  "appid": "wx6415ea5765b4fe5e",
+  "projectname": "%E4%BB%8A%E5%A4%A9%E5%90%83%E4%BB%80%E4%B9%88",
+  "compileType": "miniprogram",
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "condition": {},
+  "setting": {
+    "coverView": true,
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "enhance": true,
+    "showShadowRootInWxmlPanel": true,
+    "packNpmRelationList": [],
+    "compileHotReLoad": true,
+    "useIsolateContext": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
+  },
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
+  }
+}

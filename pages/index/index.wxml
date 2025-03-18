@@ -1,0 +1,31 @@
+<!-- 首页视图 -->
+<view class="container">
+  <!-- 标题区域 -->
+  <view class="header">
+    <text class="title">今天吃什么？</text>
+    <text class="subtitle">解决选择困难症</text>
+  </view>
+  
+  <!-- 食物展示区域 -->
+  <view class="food-display">
+    <view class="food-circle" animation="{{animationData}}">
+      <block wx:if="{{currentFood}}">
+        <image class="food-image" src="{{currentFood.image}}" mode="aspectFill"></image>
+        <text class="food-name">{{currentFood.name}}</text>
+      </block>
+      <block wx:else>
+        <text class="placeholder-text">点击下方按钮开始</text>
+      </block>
+    </view>
+  </view>
+  
+  <!-- 操作按钮区域 -->
+  <view class="action-area">
+    <button class="weui-btn random-btn" type="primary" bindtap="startRandomize" disabled="{{isRandomizing}}">
+      {{isRandomizing ? '随机选择中...' : '随机选择'}}
+    </button>
+    <button class="weui-btn history-btn" type="default" bindtap="goToHistory">
+      历史记录
+    </button>
+  </view>
+</view>

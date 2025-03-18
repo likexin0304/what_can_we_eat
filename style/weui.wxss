@@ -1,0 +1,83 @@
+/**
+ * WeUI v2.4.4
+ * 官方组件库样式
+ * 来源：https://github.com/Tencent/weui-wxss/
+ * 这里只包含了本项目需要用到的部分样式
+ */
+
+/* 按钮 */
+.weui-btn {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 8px 24px;
+  box-sizing: border-box;
+  font-weight: 700;
+  font-size: 17px;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  line-height: 1.41176471;
+  border-radius: 4px;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  overflow: hidden;
+}
+
+.weui-btn_primary {
+  background-color: #07c160;
+}
+
+.weui-btn_default {
+  color: #06ae56;
+  background-color: #f2f2f2;
+}
+
+.weui-btn_warn {
+  background-color: #fa5151;
+}
+
+.weui-btn[disabled] {
+  opacity: 0.5;
+}
+
+/* 单元格 */
+.weui-cells {
+  position: relative;
+  margin-top: 8px;
+  background-color: #fff;
+  line-height: 1.41176471;
+  font-size: 17px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.weui-cell {
+  padding: 16px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.weui-cell:before {
+  content: " ";
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 1px;
+  border-top: 1px solid rgba(0,0,0,0.1);
+  color: rgba(0,0,0,0.1);
+}
+
+.weui-cell:first-child:before {
+  display: none;
+}
+
+.weui-cell__hd {
+  display: flex;
+  align-items: center;
+}
+
+.weui-cell__bd {
+  flex: 1;
+}

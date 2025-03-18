@@ -1,0 +1,40 @@
+<!-- 历史记录页面视图 -->
+<view class="container">
+  <!-- 标题区域 -->
+  <view class="header">
+    <text class="title">历史记录</text>
+    <text class="subtitle">您的食物选择历史</text>
+  </view>
+  
+  <!-- 历史记录列表 -->
+  <view class="history-list">
+    <block wx:if="{{historyList.length > 0}}">
+      <view class="weui-cells">
+        <view class="weui-cell history-item" wx:for="{{historyList}}" wx:key="timestamp">
+          <view class="weui-cell__hd">
+            <image class="history-image" src="{{item.image}}" mode="aspectFill"></image>
+          </view>
+          <view class="weui-cell__bd">
+            <text class="history-name">{{item.name}}</text>
+            <text class="history-time">{{item.timestamp}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="empty-history">
+        <text>暂无历史记录</text>
+      </view>
+    </block>
+  </view>
+  
+  <!-- 操作按钮区域 -->
+  <view class="action-area">
+    <button class="weui-btn clear-btn" type="warn" bindtap="clearHistory" wx:if="{{historyList.length > 0}}">
+      清空历史记录
+    </button>
+    <button class="weui-btn back-btn" type="default" bindtap="goBack">
+      返回首页
+    </button>
+  </view>
+</view>

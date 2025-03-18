@@ -1,0 +1,95 @@
+/**
+ * 首页样式
+ */
+
+/* 引入WeUI样式 */
+@import "/style/weui.wxss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40rpx 0;
+  box-sizing: border-box;
+  height: 100vh;
+  background-color: #f8f8f8;
+}
+
+/* 标题区域样式 */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #07c160;
+  margin-bottom: 10rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: #888;
+}
+
+/* 食物展示区域样式 */
+.food-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex: 1;
+}
+
+.food-circle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 400rpx;
+  height: 400rpx;
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.food-image {
+  width: 240rpx;
+  height: 240rpx;
+  border-radius: 50%;
+  margin-bottom: 20rpx;
+}
+
+.food-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.placeholder-text {
+  font-size: 32rpx;
+  color: #999;
+}
+
+/* 操作按钮区域样式 */
+.action-area {
+  width: 100%;
+  padding: 0 40rpx;
+  margin-top: 40rpx;
+}
+
+.random-btn {
+  margin-bottom: 30rpx;
+  background-color: #07c160;
+}
+
+.history-btn {
+  color: #07c160;
+  border: 1px solid #07c160;
+}
