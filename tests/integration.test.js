@@ -28,7 +28,8 @@ function runAllTests() {
     { name: '随机时间范围测试', func: testRandomTimeRange },
     { name: '圆圈点击功能测试', func: testCircleClick },
     { name: '自定义Toast功能测试', func: testCustomToast },
-    { name: '图片错误处理测试', func: testImageErrorHandling }
+    { name: '图片错误处理测试', func: testImageErrorHandling },
+    { name: '图片路径错误处理测试', func: testImagePathErrorHandling }
     // 可以添加更多的测试
   ];
   
@@ -87,4 +88,88 @@ if (typeof module === 'undefined' || require.main === module) {
 // 导出测试函数
 module.exports = {
   runAllTests
-}; 
+};
+
+// 添加测试异常路径的场景
+function testImagePathErrorHandling() {
+  console.log('测试5: 测试异常图片路径处理');
+  
+  // 创建模拟App和页面对象
+  const mockApp = {
+    globalData: {
+      foodOptions: [
+        { name: '海底捞', image: '/images/haidilao.png' },
+        { name: '倍乐韩国', image: '/pages/index/images/beilei.png' }, // 错误的路径前缀
+        { name: '麦当劳', image: 'images/mcdonald.png' }  // 缺少前导斜杠
+      ],
+      defaultImage: '/images/default.png',
+      imageOptimized: true,
+      imageLoadErrors: []
+    },
+    
+    normalizePath: function(path) {
+      if (!path) return '';
+      
+      // 记录原始路径以便调试
+      const originalPath = path;
+      
+      // 移除错误的前缀，如"/pages/index"
+      if (path.includes('/pages/index/images/')) {
+        path = path.replace('/pages/index', '');
+        console.log(`路径修正: ${originalPath} -> ${path}`);
+      }
+      
+      // 确保路径以/开头
+      if (path && !path.startsWith('/')) {
+        path = '/' + path;
+        console.log(`路径添加前导斜杠: ${originalPath} -> ${path}`);
+      }
+      
+      return path;
+    },
+    
+    tryBackupPath: function(originalPath) {
+      return originalPath.startsWith('/') ? originalPath : '/' + originalPath;
+    }
+  };
+  
+  // 初始化测试
+  console.log('初始化图片路径修正测试...');
+  
+  // 测试路径修正功能
+  const testPaths = [
+    '/pages/index/images/beilei.png',
+    'images/mcdonald.png',
+    '/images/haidilao.png',
+    'brownstone.png'
+  ];
+  
+  let passCount = 0;
+  
+  // 对每个路径进行测试
+  for (const path of testPaths) {
+    const normalizedPath = mockApp.normalizePath(path);
+    console.log(`测试路径: ${path} -> 修正后: ${normalizedPath}`);
+    
+    // 验证路径是否被正确修正
+    if (path.includes('/pages/index/') && normalizedPath === '/images/beilei.png') {
+      console.log('✓ 前缀修正测试通过');
+      passCount++;
+    } else if (!path.startsWith('/') && normalizedPath.startsWith('/')) {
+      console.log('✓ 前导斜杠测试通过');
+      passCount++;
+    } else if (path === normalizedPath && path.startsWith('/images/')) {
+      console.log('✓ 正确路径保持不变测试通过');
+      passCount++;
+    } else if (path === 'brownstone.png' && normalizedPath === '/brownstone.png') {
+      console.log('✓ 非images路径前导斜杠测试通过');
+      passCount++;
+    }
+  }
+  
+  // 所有测试都应该通过
+  const allTestsPassed = passCount === testPaths.length;
+  console.log(`路径修正测试结果: ${allTestsPassed ? '全部通过' : '部分失败'} (${passCount}/${testPaths.length})`);
+  
+  return allTestsPassed;
+} 

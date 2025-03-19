@@ -39,12 +39,24 @@ Page({
 
   /**
    * 处理图片加载错误
-   * 当图片加载失败时使用默认图片替代
+   * 当图片加载失败时尝试修正路径或使用默认图片
    */
   handleImageError: function(e) {
     console.error('图片加载失败:', e);
     
     if (!this.data.currentFood) return;
+    
+    // 获取图片路径信息，如果可用
+    let errorPath = '';
+    if (e && e.target && e.target.dataset && e.target.dataset.src) {
+      errorPath = e.target.dataset.src;
+    } else if (this.data.currentFood.image) {
+      errorPath = this.data.currentFood.image;
+    }
+    
+    if (errorPath) {
+      console.log(`失败的图片路径: ${errorPath}`);
+    }
     
     // 查找当前食物在选项中的索引
     const foodIndex = app.globalData.foodOptions.findIndex(
@@ -52,7 +64,56 @@ Page({
     );
     
     if (foodIndex >= 0) {
-      // 更新食物图片为默认图片
+      // 尝试修正图片路径问题
+      const originalPath = this.data.currentFood.image;
+      
+      // 检查路径是否包含错误的前缀
+      if (originalPath && originalPath.includes('/pages/index/images/')) {
+        // 尝试修正路径
+        const correctedPath = originalPath.replace('/pages/index', '');
+        console.log(`尝试修正的路径: ${correctedPath}`);
+        
+        // 更新食物图片为修正后的路径
+        const updatedFood = { ...this.data.currentFood };
+        updatedFood.image = correctedPath;
+        
+        // 更新全局数据中的路径
+        app.globalData.foodOptions[foodIndex].image = correctedPath;
+        
+        // 更新当前显示的食物
+        this.setData({ currentFood: updatedFood });
+        
+        // 在控制台记录修正信息
+        console.log(`已尝试修正图片路径: ${originalPath} -> ${correctedPath}`);
+        
+        // 不显示Toast，让修正后的路径有机会加载
+        // 如果修正后仍然失败，会再次触发handleImageError
+        return;
+      }
+      
+      // 如果不是路径前缀问题或修正后仍然失败，尝试其他备用路径
+      const backupPath = app.tryBackupPath(originalPath);
+      if (backupPath && backupPath !== originalPath) {
+        console.log(`尝试备用路径: ${backupPath}`);
+        
+        // 更新食物图片为备用路径
+        const updatedFood = { ...this.data.currentFood };
+        updatedFood.image = backupPath;
+        
+        // 更新全局数据中的路径
+        app.globalData.foodOptions[foodIndex].image = backupPath;
+        
+        // 更新当前显示的食物
+        this.setData({ currentFood: updatedFood });
+        
+        // 在控制台记录修正信息
+        console.log(`已尝试使用备用路径: ${originalPath} -> ${backupPath}`);
+        
+        // 不显示Toast，让备用路径有机会加载
+        return;
+      }
+      
+      // 如果路径修正和备用路径都失败，使用默认图片
       const updatedFood = { ...this.data.currentFood };
       updatedFood.image = app.globalData.defaultImage;
       
@@ -64,6 +125,18 @@ Page({
       
       // 显示提示
       this.showCustomToast('图片加载失败，已使用默认图片', 2000);
+      
+      // 记录错误信息，方便后续排查
+      const errorInfo = {
+        name: this.data.currentFood.name,
+        originalPath: originalPath,
+        error: e.detail ? e.detail.errMsg : '图片加载失败'
+      };
+      
+      // 将错误信息添加到app的错误日志中
+      if (!app.globalData.imageLoadErrors.some(err => err.originalPath === originalPath)) {
+        app.globalData.imageLoadErrors.push(errorInfo);
+      }
     }
   },
 

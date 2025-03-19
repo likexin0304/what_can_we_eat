@@ -15,7 +15,13 @@
     
     <view class="food-circle" animation="{{animationData}}" bindtap="startRandomize">
       <block wx:if="{{currentFood}}">
-        <image class="food-image" src="{{currentFood.image}}" mode="aspectFill" binderror="handleImageError"></image>
+        <image 
+          class="food-image {{animationEnabled ? 'food-image-animation' : ''}}" 
+          src="{{currentFood.image}}" 
+          data-src="{{currentFood.image}}"
+          binderror="handleImageError" 
+          mode="aspectFit"
+        ></image>
         <text class="food-name">{{currentFood.name}}</text>
       </block>
       <block wx:else>
