@@ -18,15 +18,23 @@ Page({
    * 加载全局数据中的历史记录
    */
   onLoad: function() {
-    // 添加调试日志，记录加载时的历史记录
-    console.log('历史页面加载时的历史记录:', app.globalData.foodHistory);
-    
     this.setData({
       historyList: app.globalData.foodHistory
     });
     
-    // 添加调试日志，记录设置到页面的历史列表
-    console.log('设置到页面的历史列表:', this.data.historyList);
+    // 检查是否有历史记录，如果没有且是从tabBar直接访问，显示提示
+    if (app.globalData.foodHistory.length === 0) {
+      // 获取当前页面栈
+      const pages = getCurrentPages();
+      // 如果当前页面是第一个页面，说明是直接从tabBar访问的
+      if (pages.length === 1) {
+        wx.showToast({
+          title: '暂无历史记录，请先在主页进行随机选择',
+          icon: 'none',
+          duration: 2000
+        });
+      }
+    }
   },
   
   /**
@@ -66,10 +74,5 @@ Page({
     });
   },
   
-  /**
-   * 返回首页
-   */
-  goBack: function() {
-    wx.navigateBack();
-  }
+  // 返回首页功能已通过底部导航栏实现，不再需要goBack函数
 });

@@ -43,6 +43,35 @@
   align-items: center;
   width: 100%;
   flex: 1;
+  position: relative; /* 添加相对定位以便于放置自定义Toast */
+  flex-direction: column; /* 改为纵向排列 */
+}
+
+/* 自定义Toast样式 */
+.custom-toast {
+  position: absolute;
+  top: 10%; /* 修改：将位置从20%调整到10%，使其更靠上 */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 20rpx 30rpx;
+  border-radius: 10rpx;
+  font-size: 30rpx;
+  z-index: 999; /* 确保显示在上层 */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none; /* 防止点击事件干扰 */
+  margin-bottom: 60rpx; /* 添加：增加底部外边距，进一步增加与圆圈的距离 */
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.2); /* 添加：轻微阴影，增强视觉效果 */
+}
+
+.custom-toast.show {
+  opacity: 1;
+}
+
+.custom-toast.hide {
+  opacity: 0;
 }
 
 .food-circle {
@@ -57,6 +86,16 @@
   box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
   overflow: hidden;
   position: relative;
+  /* 添加点击效果 */
+  transition: all 0.2s ease;
+  cursor: pointer;
+  margin-top: 60rpx; /* 添加：增加顶部外边距，进一步增加与Toast的距离 */
+}
+
+/* 给圆圈添加悬停和激活状态效果 */
+.food-circle:active {
+  transform: scale(0.95);
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
 }
 
 .food-image {
@@ -75,21 +114,22 @@
 .placeholder-text {
   font-size: 32rpx;
   color: #999;
+  /* 使提示文字更明显 */
+  font-weight: bold;
 }
 
-/* 操作按钮区域样式 */
+/* 操作按钮区域样式 - 保留但按钮已移除 */
 .action-area {
   width: 100%;
   padding: 0 40rpx;
   margin-top: 40rpx;
 }
 
+/* 按钮样式已不再使用，但保留以防将来需要 */
 .random-btn {
   margin-bottom: 30rpx;
   background-color: #07c160;
+  display: none; /* 隐藏按钮 */
 }
 
-.history-btn {
-  color: #07c160;
-  border: 1px solid #07c160;
-}
+/* 历史按钮样式已移除，现在通过底部导航栏访问 */

@@ -1,0 +1,187 @@
+/**
+ * 个人资料页面样式
+ */
+
+/* 引入WeUI样式 */
+@import "/style/weui.wxss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx 0;
+  box-sizing: border-box;
+  min-height: 100vh;
+  background-color: #f8f8f8;
+}
+
+/* 标题区域样式 */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #07c160;
+  margin-bottom: 10rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: #888;
+}
+
+/* 用户信息区域样式 */
+.user-info {
+  width: 100%;
+  padding: 0 40rpx;
+  margin-bottom: 40rpx;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  background-color: #fff;
+  border-radius: 12rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.user-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-right: 30rpx;
+  border: 2rpx solid #f0f0f0;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-nickname {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.user-level {
+  font-size: 28rpx;
+  color: #07c160;
+}
+
+.not-linked {
+  border: 2rpx dashed #ddd;
+  background-color: #fafafa;
+}
+
+/* 账号关联区域样式 */
+.account-section {
+  width: 100%;
+  padding: 0 40rpx;
+  margin-bottom: 40rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.weui-cell__ft {
+  color: #999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.link-status {
+  font-size: 28rpx;
+}
+
+.link-desc {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 6rpx;
+}
+
+.linked {
+  color: #07c160;
+  font-weight: bold;
+}
+
+/* 按钮样式优化 */
+.action-area {
+  margin-top: 20rpx;
+}
+
+.link-btn {
+  background-color: #07c160;
+  font-weight: normal;
+}
+
+.unlink-btn {
+  font-weight: normal;
+}
+
+/* 隐私说明区域样式 */
+.privacy-section {
+  width: 100%;
+  padding: 0 40rpx;
+  margin-bottom: 40rpx;
+}
+
+.privacy-content {
+  background-color: #fff;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+.privacy-content text {
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.action-area {
+  margin-top: 30rpx;
+}
+
+.link-btn {
+  background-color: #07c160;
+}
+
+.unlink-btn {
+  color: #fa5151;
+  border: 1px solid #fa5151;
+}
+
+/* 隐私说明区域样式 */
+.privacy-section {
+  width: 100%;
+  padding: 0 40rpx;
+}
+
+.privacy-content {
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 30rpx;
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+.privacy-content text {
+  display: block;
+  margin-bottom: 10rpx;
+}

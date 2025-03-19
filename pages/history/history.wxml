@@ -33,8 +33,5 @@
     <button class="weui-btn clear-btn" type="warn" bindtap="clearHistory" wx:if="{{historyList.length > 0}}">
       清空历史记录
     </button>
-    <button class="weui-btn back-btn" type="default" bindtap="goBack">
-      返回首页
-    </button>
   </view>
 </view>

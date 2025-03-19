@@ -1,0 +1,75 @@
+<!-- 个人资料页面视图 -->
+<view class="container">
+  <!-- 标题区域 -->
+  <view class="header">
+    <text class="title">我的</text>
+    <text class="subtitle">个人资料与账号管理</text>
+  </view>
+  
+  <!-- 用户信息区域 -->
+  <view class="user-info">
+    <block wx:if="{{isDianpingLinked && userInfo}}">
+      <view class="user-card">
+        <image class="user-avatar" src="{{userInfo.avatar}}" mode="aspectFill"></image>
+        <view class="user-details">
+          <text class="user-nickname">{{userInfo.nickname}}</text>
+          <text class="user-level">{{userInfo.level}}</text>
+        </view>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="user-card not-linked">
+        <image class="user-avatar" src="/images/logo.png" mode="aspectFill"></image>
+        <view class="user-details">
+          <text class="user-nickname">美食爱好者</text>
+          <text class="user-level">关联大众点评账号获取更多美食推荐</text>
+        </view>
+      </view>
+    </block>
+  </view>
+  
+  <!-- 账号关联区域 -->
+  <view class="account-section">
+    <view class="section-title">账号关联</view>
+    <view class="weui-cells">
+      <view class="weui-cell">
+        <view class="weui-cell__bd">大众点评账号</view>
+        <view class="weui-cell__ft">
+          <block wx:if="{{isDianpingLinked}}">
+            <text class="link-status linked">已关联</text>
+          </block>
+          <block wx:else>
+            <text class="link-status">未关联</text>
+            <text class="link-desc">关联后可获取附近餐厅推荐</text>
+          </block>
+        </view>
+      </view>
+    </view>
+    
+    <view class="action-area">
+      <block wx:if="{{isDianpingLinked}}">
+        <button class="weui-btn unlink-btn" type="default" bindtap="unlinkDianpingAccount" loading="{{isLoading}}" disabled="{{isLoading}}">
+          解除关联
+        </button>
+      </block>
+      <block wx:else>
+        <button class="weui-btn link-btn" type="primary" bindtap="linkDianpingAccount" loading="{{isLoading}}" disabled="{{isLoading}}">
+          去关联
+        </button>
+      </block>
+    </view>
+  </view>
+  
+  <!-- 隐私说明区域 -->
+  <view class="privacy-section">
+    <view class="section-title">隐私说明</view>
+    <view class="privacy-content">
+      <text>关联大众点评账号后，我们将获取您的以下信息：</text>
+      <text>• 基本信息（昵称、头像等）</text>
+      <text>• 收藏的餐厅列表</text>
+      <text>• 评价历史</text>
+      <text>• 常去餐厅</text>
+      <text>这些数据仅用于小程序内的随机推荐功能，不会用于其他用途。</text>
+    </view>
+  </view>
+</view>

@@ -86,10 +86,5 @@
 }
 
 .clear-btn {
-  margin-bottom: 30rpx;
-}
-
-.back-btn {
-  color: #07c160;
-  border: 1px solid #07c160;
+  margin-bottom: 0;
 }

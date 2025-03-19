@@ -8,24 +8,25 @@
   
   <!-- 食物展示区域 -->
   <view class="food-display">
-    <view class="food-circle" animation="{{animationData}}">
+    <!-- 自定义提示框，默认隐藏 -->
+    <view class="custom-toast {{showCustomToast ? 'show' : 'hide'}}">
+      <text>{{customToastText}}</text>
+    </view>
+    
+    <view class="food-circle" animation="{{animationData}}" bindtap="startRandomize">
       <block wx:if="{{currentFood}}">
-        <image class="food-image" src="{{currentFood.image}}" mode="aspectFill"></image>
+        <image class="food-image" src="{{currentFood.image}}" mode="aspectFill" binderror="handleImageError"></image>
         <text class="food-name">{{currentFood.name}}</text>
       </block>
       <block wx:else>
-        <text class="placeholder-text">点击下方按钮开始</text>
+        <text class="placeholder-text">点我开始</text>
       </block>
     </view>
   </view>
   
-  <!-- 操作按钮区域 -->
+  <!-- 操作按钮区域 - 按钮已移除 -->
   <view class="action-area">
-    <button class="weui-btn random-btn" type="primary" bindtap="startRandomize" disabled="{{isRandomizing}}">
-      {{isRandomizing ? '随机选择中...' : '随机选择'}}
-    </button>
-    <button class="weui-btn history-btn" type="default" bindtap="goToHistory">
-      历史记录
-    </button>
+    <!-- 随机选择按钮已移除，现在通过点击圆圈触发随机选择 -->
+    <!-- 历史记录按钮已移除，现在通过底部导航栏访问 -->
   </view>
 </view>
