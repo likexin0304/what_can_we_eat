@@ -2,18 +2,26 @@
 
 ## 项目介绍
 
-"今天吃什么？"是一款解决用户日常饮食选择困难的微信小程序。通过简单的随机推荐功能，帮助用户快速决定当餐饮食选择，减轻用户的决策负担。小程序支持餐厅收藏、历史记录查看、大众点评账号关联等功能，为用户提供全方位的用餐决策服务。
+"今天吃什么？"是一款解决用户日常饮食选择困难的微信小程序。通过基于地理位置的餐厅推荐和随机选择功能，帮助用户快速决定当餐饮食选择，减轻用户的决策负担。小程序支持餐厅收藏、历史记录查看、根据餐厅类型显示不同图片等功能，为用户提供全方位的用餐决策服务。
 
 ## 功能特点
 
-1. **随机推荐**：点击圆形区域，系统会在3-5秒内随机切换不同食物选项，最终推荐一种食物。
-2. **圆形UI展示**：食物推荐结果以圆形UI方式展示，包含食物名称和对应图片。
-3. **历史记录**：记录用户最近随机的食物，提供历史记录查看功能。
-4. **图片优化**：自动压缩和调整图片尺寸，优化加载性能，总体积减少74%。
-5. **错误处理**：智能处理图片路径错误，自动修正路径，确保应用稳定运行。
-6. **大众点评关联**：支持用户关联大众点评账号，导入收藏餐厅，获取详细信息。
-7. **基于地理位置的餐厅推荐**：获取用户当前位置，推荐指定半径范围内的餐厅
-8. **随机选择功能**：从附近餐厅中随机选择，解决选择困难
+1. **基于地理位置的餐厅推荐**：获取用户当前位置，推荐指定半径范围内的餐厅。
+2. **搜索半径调整**：用户可以调整搜索半径（1-10公里），查找更大范围的餐厅。
+3. **餐厅分类图片**：根据餐厅类型（中餐、西餐、日料等）显示不同的代表图片。
+4. **随机选择功能**：从附近餐厅中随机选择，解决选择困难。
+5. **餐厅详情展示**：显示餐厅名称、类别、评分、距离和地址等详细信息。
+6. **历史记录**：记录用户最近随机选择的餐厅，提供历史记录查看功能。
+7. **图片优化与错误处理**：自动处理图片路径错误，确保应用稳定运行。
+8. **加载动画**：加载数据时显示友好的加载动画，提升用户体验。
+9. **本地数据模式**：支持使用模拟数据进行测试，确保无网络环境下也能使用。
+
+## 开发环境
+
+- 开发工具：微信开发者工具 1.06.2412050
+- 基础库：3.0.2
+- 小程序APPID：你的小程序APPID
+- 高德地图API密钥：在高德开放平台创建的微信小程序KEY
 
 ## 项目结构
 
@@ -22,19 +30,20 @@
 ├── app.json               # 应用程序配置文件
 ├── app.wxss               # 应用程序全局样式
 ├── sitemap.json           # 小程序索引配置文件
-├── images/                # 图片资源目录（优化后的图片）
-│   ├── haidilao.png       # 海底捞图片
-│   ├── henjiuyiqian.png   # 很久以前羊肉串图片
-│   ├── kfc.png            # KFC图片
+├── images/                # 图片资源目录
+│   ├── haidilao.png       # 火锅餐厅图片
+│   ├── henjiuyiqian.png   # 通用餐厅图片
+│   ├── kfc.png            # 肯德基图片
 │   ├── mcdonald.png       # 麦当劳图片
-│   ├── jinriniushi.png    # 今日牛事图片
-│   ├── qinghegu.png       # 青鹤谷图片
-│   ├── tailang.png        # 泰廊图片
-│   ├── beilei.png         # 倍乐韩国图片
-│   ├── brownstone.png     # brownstone西班牙图片
-│   ├── meiguo.png         # 梅果图片
+│   ├── jinriniushi.png    # 日料图片
+│   ├── renheguan.png      # 中餐图片
 │   ├── shaokao.png        # 烧烤图片
-│   └── logo.png           # 默认图片（用于加载失败时显示）
+│   ├── beilei.png         # 咖啡甜品图片
+│   ├── brownstone.png     # 西餐图片
+│   ├── meiguo.png         # 快餐图片
+│   └── dabaokoufu.png     # 默认图片（用于加载失败时显示）
+├── libs/                  # 第三方库目录
+│   └── amap-wx.130.js     # 高德地图微信小程序SDK
 ├── pages/                 # 页面目录
 │   ├── index/             # 首页目录
 │   │   ├── index.js       # 首页逻辑
@@ -44,312 +53,234 @@
 │   │   ├── history.js     # 历史记录页面逻辑
 │   │   ├── history.wxml   # 历史记录页面结构
 │   │   └── history.wxss   # 历史记录页面样式
-│   ├── auth/              # 授权页面目录
-│   │   ├── index.js       # 授权页面逻辑
-│   │   ├── index.wxml     # 授权页面结构
-│   │   ├── index.wxss     # 授权页面样式
-│   │   ├── webview.js     # 网页视图页面逻辑
-│   │   ├── webview.wxml   # 网页视图页面结构
-│   │   ├── result.js      # 授权结果页面逻辑
-│   │   └── result.wxml    # 授权结果页面结构
-│   ├── user/              # 用户页面目录
-│   │   ├── index.js       # 用户页面逻辑
-│   │   ├── index.wxml     # 用户页面结构
-│   │   └── index.wxss     # 用户页面样式
-│   └── shop/              # 店铺详情页面目录
-│       ├── detail.js      # 店铺详情页面逻辑
-│       ├── detail.wxml    # 店铺详情页面结构
-│       └── detail.wxss    # 店铺详情页面样式
+│   └── user/              # 用户页面目录
+│       ├── index.js       # 用户页面逻辑
+│       ├── index.wxml     # 用户页面结构
+│       └── index.wxss     # 用户页面样式
 ├── style/                 # 样式目录
 │   └── weui.wxss          # WeUI样式库
 └── tests/                 # 测试文件目录
-    ├── randomTime.test.js # 测试随机时间范围
-    ├── circleClick.test.js # 测试圆圈点击功能
-    ├── customToast.test.js # 测试自定义toast功能
-    ├── imageError.test.js # 测试图片错误处理
+    ├── unit/              # 单元测试目录
+    │   └── location.test.js # 地理位置功能测试
     └── integration.test.js # 集成测试
 ```
 
 ## 核心功能说明
 
-### 随机选择算法
+### 基于地理位置的餐厅推荐
 
-随机选择功能在 `pages/index/index.js` 中的 `startRandomize` 函数实现：
+使用微信小程序的`wx.getLocation`API获取用户当前位置，然后通过高德地图SDK的`getPoiAround`方法获取附近的餐厅信息：
 
 ```javascript
-startRandomize: function() {
-  if (this.data.isRandomizing) {
-    this.showCustomToast('正在选择中...', 1500);
-    return;
-  }
+// 获取用户当前位置
+getUserLocation: function() {
+  wx.getLocation({
+    type: 'gcj02', // 使用gcj02坐标系，与高德地图兼容
+    success: (res) => {
+      // 更新位置信息
+      this.setData({
+        userLocation: {
+          latitude: res.latitude,
+          longitude: res.longitude
+        }
+      });
+      
+      // 根据位置搜索附近餐厅
+      this.fetchNearbyRestaurants();
+    }
+  });
+}
+
+// 获取附近餐厅数据
+fetchNearbyRestaurants: function() {
+  const { latitude, longitude } = this.data.userLocation;
+  const radius = this.data.searchRadius * 1000; // 转换为米
   
-  this.setData({
-    isRandomizing: true
+  // 创建高德地图实例
+  const amapInstance = new AMapWX.AMapWX({
+    key: AMAP_KEY
   });
   
-  // 生成3-5秒的随机时间
-  const randomTime = Math.floor(Math.random() * 2000) + 3000;
-  
-  // 开始随机动画
-  this.startAnimation();
-  
-  // 定时停止并显示结果
-  setTimeout(() => {
-    this.stopRandomizeAndShowResult();
-  }, randomTime);
+  // 使用高德SDK获取周边POI
+  amapInstance.getPoiAround({
+    querykeywords: '餐厅|美食',
+    querytypes: '050000', // 餐饮类POI
+    location: `${longitude},${latitude}`,
+    radius: radius, // 搜索半径参数
+    success: (res) => {
+      // 处理返回的餐厅数据
+      if (res && res.poisData && res.poisData.length > 0) {
+        const restaurants = res.poisData.map(item => {
+          // 处理餐厅数据...
+        });
+        
+        this.setData({
+          nearbyRestaurants: restaurants
+        });
+      }
+    }
+  });
 }
 ```
 
-### 图片路径修正与错误处理
+### 随机选择功能
 
-图片路径修正功能在 `app.js` 中实现：
+从附近餐厅中随机选择一个餐厅，并展示相关信息：
 
 ```javascript
-normalizePath: function(path) {
-  if (!path) return '';
+startRandomizeWithLocation: function() {
+  // 检查是否有餐厅数据
+  const restaurants = this.data.nearbyRestaurants;
   
-  // 记录原始路径以便调试
-  const originalPath = path;
+  // 设置为随机选择状态
+  this.setData({ isRandomizing: true });
   
-  // 移除错误的前缀，如"/pages/index"
-  if (path.includes('/pages/index/images/')) {
-    path = path.replace('/pages/index', '');
-    console.log(`路径修正: ${originalPath} -> ${path}`);
-  }
+  // 随机时间，3-5秒
+  const randomTime = Math.floor(Math.random() * 2000) + 3000;
+  const intervalTime = 100; // 切换间隔时间
+  let elapsedTime = 0;
+  let intervalId;
   
-  // 确保路径以/开头
-  if (path && !path.startsWith('/')) {
-    path = '/' + path;
-    console.log(`路径添加前导斜杠: ${originalPath} -> ${path}`);
-  }
+  // 创建淡入淡出动画
+  const fadeAnimation = () => {
+    // 动画效果...
+    setTimeout(() => {
+      // 随机选择一个餐厅
+      const randomIndex = Math.floor(Math.random() * restaurants.length);
+      this.setData({ currentFood: restaurants[randomIndex] });
+    }, 150);
+  };
   
-  return path;
+  // 开始随机切换餐厅
+  fadeAnimation();
+  intervalId = setInterval(() => {
+    // 随机切换餐厅
+    fadeAnimation();
+    
+    // 达到随机时间后停止
+    if (elapsedTime >= randomTime) {
+      clearInterval(intervalId);
+      
+      // 记录最终结果
+      // ...
+    }
+  }, intervalTime);
 }
 ```
 
-图片加载错误处理在 `pages/index/index.js` 中实现：
+### 餐厅类型图片匹配
+
+根据餐厅类型返回对应的图片路径：
+
+```javascript
+function getRestaurantImageByCategory(category) {
+  // 将类别转换为小写，方便匹配
+  const lowerCategory = (category || '').toLowerCase();
+  
+  // 中餐类
+  if (lowerCategory.includes('中餐') || 
+      lowerCategory.includes('川菜') || 
+      lowerCategory.includes('火锅')) {
+    if (lowerCategory.includes('火锅')) {
+      return '/images/haidilao.png';
+    } else {
+      return '/images/renheguan.png';
+    }
+  }
+  
+  // 西餐类
+  else if (lowerCategory.includes('西餐') || 
+          lowerCategory.includes('牛排')) {
+    return '/images/brownstone.png';
+  }
+  
+  // 日料类
+  else if (lowerCategory.includes('日本') || 
+          lowerCategory.includes('寿司')) {
+    return '/images/jinriniushi.png';
+  }
+  
+  // 默认图片
+  else {
+    return '/images/dabaokoufu.png';
+  }
+}
+```
+
+### 图片加载错误处理
+
+处理图片加载失败的情况，确保应用稳定运行：
 
 ```javascript
 handleImageError: function(e) {
-  console.error('图片加载失败:', e);
+  // 获取错误的图片路径
+  const errorImgSrc = e.target.dataset.src;
   
-  if (!this.data.currentFood) return;
-  
-  // 获取图片路径信息
-  let errorPath = '';
-  if (e && e.target && e.target.dataset && e.target.dataset.src) {
-    errorPath = e.target.dataset.src;
-  } else if (this.data.currentFood.image) {
-    errorPath = this.data.currentFood.image;
-  }
-  
-  // 查找当前食物在选项中的索引
-  const foodIndex = app.globalData.foodOptions.findIndex(
-    food => food.name === this.data.currentFood.name
-  );
-  
-  if (foodIndex >= 0) {
-    // 尝试修正图片路径问题
-    const originalPath = this.data.currentFood.image;
+  // 替换为默认图片
+  if (this.data.currentFood) {
+    const updatedFood = {...this.data.currentFood};
+    updatedFood.image = '/images/dabaokoufu.png';
     
-    // 检查路径是否包含错误的前缀
-    if (originalPath && originalPath.includes('/pages/index/images/')) {
-      // 尝试修正路径
-      const correctedPath = originalPath.replace('/pages/index', '');
-      
-      // 更新食物图片为修正后的路径
-      const updatedFood = { ...this.data.currentFood };
-      updatedFood.image = correctedPath;
-      
-      // 更新全局数据中的路径
-      app.globalData.foodOptions[foodIndex].image = correctedPath;
-      
-      // 更新当前显示的食物
-      this.setData({ currentFood: updatedFood });
-      return;
-    }
-    
-    // 尝试备用路径，如果失败则使用默认图片
-    const backupPath = app.tryBackupPath(originalPath);
-    if (backupPath && backupPath !== originalPath) {
-      const updatedFood = { ...this.data.currentFood };
-      updatedFood.image = backupPath;
-      app.globalData.foodOptions[foodIndex].image = backupPath;
-      this.setData({ currentFood: updatedFood });
-      return;
-    }
-    
-    // 如果所有尝试都失败，使用默认图片
-    const updatedFood = { ...this.data.currentFood };
-    updatedFood.image = app.globalData.defaultImage;
-    app.globalData.foodOptions[foodIndex].image = app.globalData.defaultImage;
-    this.setData({ currentFood: updatedFood });
-    this.showCustomToast('图片加载失败，已使用默认图片', 2000);
+    this.setData({
+      currentFood: updatedFood
+    });
   }
 }
 ```
-
-### 历史记录功能
-
-历史记录功能在 `app.js` 中的 `addToHistory` 函数和 `pages/history/history.js` 中实现：
-
-```javascript
-addToHistory: function(food) {
-  const history = this.globalData.foodHistory;
-  // 添加时间戳和规范化图片路径
-  const foodWithTimestamp = {
-    ...food,
-    // 规范化图片路径
-    image: this.normalizePath(food.image),
-    timestamp: new Date().toLocaleString()
-  };
-  
-  // 将新记录添加到历史记录的开头
-  history.unshift(foodWithTimestamp);
-  
-  // 限制历史记录最多保存20条
-  if (history.length > 20) {
-    history.pop();
-  }
-}
-```
-
-### 大众点评账号关联
-
-大众点评账号关联功能在 `pages/auth/index.js` 中实现：
-
-```javascript
-startAuth: function() {
-  this.setData({ isLoading: true });
-  
-  // 获取授权链接
-  wx.request({
-    url: 'https://你的服务器地址/api/dianping/auth-url',
-    success: (res) => {
-      const { authUrl } = res.data;
-      
-      // 在web-view中打开授权页面
-      wx.navigateTo({
-        url: `/pages/auth/webview?url=${encodeURIComponent(authUrl)}`
-      });
-    },
-    fail: (err) => {
-      wx.showToast({
-        title: '获取授权链接失败',
-        icon: 'none'
-      });
-    },
-    complete: () => {
-      this.setData({ isLoading: false });
-    }
-  });
-}
-```
-
-## 图片优化技术
-
-本项目实现了全面的图片优化，将图片目录大小从820KB减少到248KB，减少了74%：
-
-1. **自动预加载**：应用启动时自动预加载所有图片
-2. **路径修正**：智能检测并修正错误的图片路径
-3. **备用路径**：提供多种备用路径尝试机制
-4. **默认图片降级**：当图片加载失败时自动使用默认图片
-5. **错误日志**：详细记录图片加载错误情况以便排查
 
 ## 使用说明
 
-1. **随机选择食物**
-   - 打开小程序，进入首页
-   - 点击圆形区域，等待3-5秒随机过程
-   - 查看推荐的食物结果
+### 小程序配置要求
 
-2. **查看历史记录**
-   - 通过底部导航栏，切换到历史记录页面
-   - 查看历史选择的食物和时间
+1. **域名配置**：
+   在微信公众平台 -> 开发 -> 开发设置 -> 服务器域名中添加：
+   - `https://restapi.amap.com`（高德地图REST API）
+   - `https://webapi.amap.com`（高德地图Web API，可选）
 
-3. **关联大众点评账号**
-   - 进入用户页面
-   - 点击"关联大众点评账号"
-   - 按照提示完成授权流程
-   - 导入收藏的餐厅
+2. **API接口配置**：
+   在微信公众平台 -> 开发 -> 接口设置中，开启：
+   - 地理位置接口
 
-4. **查看餐厅详情**
-   - 点击餐厅名称或图片
-   - 查看餐厅详细信息、评分、位置等
-   - 支持打开大众点评查看更多信息
+3. **高德地图API密钥**：
+   - 前往高德开放平台（https://lbs.amap.com/）创建一个微信小程序类型的应用
+   - 获取Key并配置安全域名为你的小程序AppID
 
-## 测试
+### 本地开发调试
 
-项目包含完整的测试套件，覆盖所有核心功能：
+1. 在微信开发者工具中，开启"不校验合法域名、web-view（业务域名）、TLS 版本以及 HTTPS 证书"选项
+2. 替换`pages/index/index.js`中的`AMAP_KEY`变量为你的高德地图API密钥
+3. 运行项目，测试获取位置、搜索餐厅功能
 
-1. **随机时间范围测试**：验证随机时间是否在3-5秒范围内
-2. **圆圈点击功能测试**：验证点击交互和状态变化
-3. **自定义Toast测试**：验证提示信息显示功能
-4. **图片错误处理测试**：验证图片加载失败的修复机制
-5. **路径修正测试**：验证不同路径格式的自动修正
-6. **集成测试**：验证各功能协同工作
+### 发布说明
 
-运行测试：在项目根目录执行 `node tests/integration.test.js`
+1. 确保已在微信公众平台配置了合法域名
+2. 上传代码并提交审核
+3. 审核通过后发布小程序
 
-## 技术亮点
+## 常见问题
 
-1. **健壮的错误处理**：多层次的错误处理和恢复机制
-2. **性能优化**：图片资源优化，提升加载速度
-3. **用户体验**：流畅的动画效果和明确的状态反馈
-4. **第三方平台集成**：无缝接入大众点评开放平台
-5. **完善的测试**：全面的测试覆盖，保证稳定性
+1. **图片无法加载**：
+   - 确保图片文件存在于images目录中
+   - 检查图片路径是否正确
+   - 对于缺失的图片，会自动使用默认图片替代
 
-## 后续开发计划
+2. **无法获取位置**：
+   - 确保小程序已开启地理位置接口权限
+   - 确保用户已授予位置权限
+   - 检查app.json中是否配置了位置权限说明
 
-1. 增加餐厅标签和分类功能
-2. 支持按距离、评分等条件筛选
-3. 加入用户评价和推荐系统
-4. 优化大众点评数据同步机制
-5. 增加多人共同决策功能
+3. **无法连接高德地图服务**：
+   - 确保已在微信公众平台配置了合法域名
+   - 检查高德地图API密钥是否正确
+   - 在开发工具中可临时开启"不校验合法域名"选项进行调试
 
-## 注意事项
+## 未来计划
 
-- 本项目使用WeUI组件库，确保正确引入样式文件
-- 关联大众点评账号需要申请相应的开放平台权限
-- 图片资源已经过优化，无需再次处理
+1. 添加餐厅收藏功能
+2. 接入餐厅评论和用户评分系统
+3. 优化搜索体验，支持按菜系、价格区间筛选
+4. 实现基于用户口味偏好的智能推荐算法
 
-## 技术实现
+## 开源许可
 
-- 使用微信小程序框架开发
-- 调用腾讯位置服务API获取附近餐厅POI数据
-- 使用Haversine公式计算地理位置距离
-- 动画效果增强用户体验
-
-## 使用方法
-
-1. 打开小程序，点击"获取位置"按钮授权位置权限
-2. 使用滑块调整搜索半径（1-10公里）
-3. 点击中央圆圈开始随机选择餐厅
-4. 随机结束后展示推荐餐厅信息，包含名称、距离、类别等信息
-5. 可在"历史"页面查看历史推荐记录
-
-## 开发说明
-
-### 位置服务配置
-
-需要在腾讯位置服务平台申请开发者密钥，并在`index.js`的`fetchNearbyRestaurants`函数中替换以下代码：
-
-```javascript
-wx.request({
-  url: 'https://apis.map.qq.com/ws/place/v1/search',
-  data: {
-    key: '此处需要替换为您的腾讯位置服务密钥', // ⚠️需要替换为实际密钥
-    // 其他参数...
-  },
-  // ...
-});
-```
-
-### 单元测试
-
-项目包含完整的单元测试，测试位置服务和随机推荐功能。运行测试：
-
-```bash
-npm install
-npm test
-```
+本项目使用MIT许可证。详情请查看LICENSE文件。

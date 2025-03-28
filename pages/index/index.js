@@ -1,6 +1,16 @@
 /**
  * 首页逻辑
  * 实现基于地理位置的随机餐厅推荐功能
+ * 
+ * 主要功能：
+ * 1. 获取用户位置并搜索附近餐厅
+ * 2. 支持调整搜索半径(1-10公里)
+ * 3. 根据餐厅类型显示不同的图片
+ * 4. 随机选择餐厅并展示详情
+ * 5. 支持本地模拟数据测试模式
+ * 
+ * 主要数据流：
+ * 用户位置 -> 高德地图API -> 餐厅列表 -> 随机选择 -> 展示结果
  */
 const app = getApp();
 const AMapWX = require('../../libs/amap-wx.130.js');
@@ -13,8 +23,10 @@ const USE_MOCK_DATA = false;
 
 /**
  * 根据餐厅类别获取对应的图片
- * @param {string} category - 餐厅类别
- * @return {string} 图片路径
+ * 基于餐厅的类别信息返回最匹配的图片路径
+ * 
+ * @param {string} category - 餐厅类别，如"中餐"、"西餐"、"日料"等
+ * @return {string} 图片路径，格式为"/images/xxx.png"
  */
 function getRestaurantImageByCategory(category) {
   // 将类别转换为小写，方便匹配
@@ -189,21 +201,21 @@ const MOCK_RESTAURANTS = [
 Page({
   /**
    * 页面的初始数据
-   * currentFood: 当前显示的餐厅
-   * isRandomizing: 是否正在随机选择中
-   * animationData: 动画数据
-   * showCustomToast: 是否显示自定义Toast
-   * customToastText: 自定义Toast文本内容
-   * userLocation: 用户当前位置
-   * searchRadius: 搜索半径（公里）
-   * nearbyRestaurants: 附近餐厅列表
-   * isLoading: 是否正在加载数据
-   * testResults: API测试结果
-   * __debug: 调试模式标志
-   * useMockData: 使用模拟数据标志，传递到视图
-   * showApiKeyModal: 是否显示API密钥设置弹窗
-   * tempApiKey: 临时存储用户输入的API密钥
-   * showDecisionBanner: 控制决定横幅的显示隐藏
+   * @property {Object|null} currentFood - 当前显示的餐厅
+   * @property {boolean} isRandomizing - 是否正在随机选择中
+   * @property {Object} animationData - 动画数据
+   * @property {boolean} showCustomToast - 是否显示自定义Toast
+   * @property {string} customToastText - 自定义Toast文本内容
+   * @property {Object|null} userLocation - 用户当前位置，包含latitude和longitude
+   * @property {number} searchRadius - 搜索半径，单位为公里
+   * @property {Array} nearbyRestaurants - 附近餐厅列表
+   * @property {boolean} isLoading - 是否正在加载数据
+   * @property {Object} testResults - API测试结果
+   * @property {boolean} __debug - 调试模式标志
+   * @property {boolean} useMockData - 使用模拟数据标志
+   * @property {boolean} showApiKeyModal - 是否显示API密钥设置弹窗
+   * @property {string} tempApiKey - 临时存储用户输入的API密钥
+   * @property {boolean} showDecisionBanner - 控制决定横幅的显示隐藏
    */
   data: {
     currentFood: null,
@@ -229,6 +241,7 @@ Page({
 
   /**
    * 生命周期函数 - 监听页面加载
+   * 初始化动画，检查系统信息，自动测试API连接并获取位置
    */
   onLoad: function () {
     // 初始化动画
@@ -271,8 +284,28 @@ Page({
   },
   
   /**
+   * 显示自定义Toast消息
+   * @param {string} text - 要显示的文本内容
+   * @param {number} duration - 显示持续时间，单位为毫秒
+   */
+  showCustomToast: function(text, duration = 2000) {
+    this.setData({
+      customToastText: text,
+      showCustomToast: true
+    });
+    
+    // 设置定时器，在指定时间后隐藏Toast
+    setTimeout(() => {
+      this.setData({
+        showCustomToast: false
+      });
+    }, duration);
+  },
+  
+  /**
    * 处理图片加载错误
    * 当餐厅图片加载失败时，使用默认图片替代
+   * @param {Object} e - 错误事件对象
    */
   handleImageError: function(e) {
     console.log('图片加载失败:', e);
@@ -296,27 +329,9 @@ Page({
   },
 
   /**
-   * 显示自定义Toast
-   * @param {string} text - 要显示的文本内容
-   * @param {number} duration - 显示持续时间，单位为毫秒
-   */
-  showCustomToast: function(text, duration = 2000) {
-    this.setData({
-      customToastText: text,
-      showCustomToast: true
-    });
-    
-    // 设置定时器，在指定时间后隐藏Toast
-    setTimeout(() => {
-      this.setData({
-        showCustomToast: false
-      });
-    }, duration);
-  },
-  
-  /**
    * 获取用户当前位置
    * 获取用户的地理位置信息，并根据位置搜索附近餐厅
+   * 使用wx.getLocation API获取经纬度坐标
    */
   getUserLocation: function() {
     // 如果正在加载中，避免重复操作
@@ -393,6 +408,7 @@ Page({
   /**
    * 获取附近餐厅数据
    * 使用高德地图SDK根据用户位置和搜索半径获取附近餐馆信息
+   * 支持本地模拟数据模式和在线API请求模式
    */
   fetchNearbyRestaurants: function() {
     // 确保已经获取到用户位置
@@ -520,7 +536,10 @@ Page({
   
   /**
    * 修改搜索半径
-   * @param {Object} e - 滑块事件对象
+   * 处理用户调整搜索半径滑块的事件，更新UI并重新搜索
+   * 包含防抖机制，避免频繁调用API
+   * 
+   * @param {Object} e - 滑块事件对象，包含detail.value表示选择的半径值
    */
   radiusChanged: function(e) {
     const radius = e.detail.value;
@@ -558,11 +577,13 @@ Page({
   
   /**
    * 计算两点间的距离（使用Haversine公式）
+   * 根据两点的经纬度坐标计算球面距离
+   * 
    * @param {number} lat1 - 第一点纬度
    * @param {number} lon1 - 第一点经度
    * @param {number} lat2 - 第二点纬度
    * @param {number} lon2 - 第二点经度
-   * @return {number} 距离，单位为公里
+   * @return {number} 距离，单位为公里，保留一位小数
    */
   calculateDistance: function(lat1, lon1, lat2, lon2) {
     const R = 6371; // 地球半径，单位为千米
@@ -579,8 +600,10 @@ Page({
   
   /**
    * 角度转弧度
-   * @param {number} degrees - 角度
-   * @return {number} 弧度
+   * 辅助函数，用于地理距离计算
+   * 
+   * @param {number} degrees - 角度值
+   * @return {number} 对应的弧度值
    */
   toRadians: function(degrees) {
     return degrees * Math.PI / 180;
@@ -716,7 +739,7 @@ Page({
   /**
    * 通过关键字搜索餐厅
    * 当周边搜索无结果时，可以使用此备选方案
-   * 使用高德地图SDK的关键字搜索
+   * 使用高德地图SDK的关键字搜索功能
    */
   searchRestaurantsByKeyword: function() {
     // 确保已经获取到用户位置
@@ -847,6 +870,7 @@ Page({
 
   /**
    * 显示API密钥设置弹窗
+   * 允许用户手动设置高德地图API密钥
    */
   showApiKeyInput: function() {
     this.setData({
@@ -857,6 +881,9 @@ Page({
   
   /**
    * 处理API密钥输入
+   * 保存用户输入的API密钥到临时变量
+   * 
+   * @param {Object} e - 输入事件对象
    */
   onApiKeyInput: function(e) {
     this.setData({
@@ -866,6 +893,7 @@ Page({
   
   /**
    * 取消API密钥设置
+   * 关闭API密钥设置弹窗，清空临时输入
    */
   cancelApiKey: function() {
     this.setData({
@@ -877,7 +905,7 @@ Page({
   /**
    * 保存API密钥设置
    * 由于JavaScript的限制，无法直接修改常量AMAP_KEY的值
-   * 这里使用全局变量进行替代
+   * 这里使用全局变量进行替代，保存后自动重试API连接
    */
   saveApiKey: function() {
     const newKey = this.data.tempApiKey.trim();
@@ -914,6 +942,7 @@ Page({
   /**
    * 设置动画效果
    * 初始化动画实例，设置动画参数
+   * 创建用于随机选择过程中的淡入淡出动画
    */
   setupAnimation: function() {
     // 创建动画实例，设置动画持续时间和缓动函数
@@ -929,6 +958,7 @@ Page({
   /**
    * 检查系统信息
    * 检查用户系统和权限设置
+   * 初始化必要的系统参数并检查位置权限
    */
   checkSystemInfo: function() {
     // 初始化导航标志，防止重复导航操作
