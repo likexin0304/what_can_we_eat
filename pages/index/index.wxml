@@ -6,33 +6,113 @@
     <text class="subtitle">解决选择困难症</text>
   </view>
   
-  <!-- 食物展示区域 -->
-  <view class="food-display">
-    <!-- 自定义提示框，默认隐藏 -->
-    <view class="custom-toast {{showCustomToast ? 'show' : 'hide'}}">
-      <text>{{customToastText}}</text>
+  <!-- 位置区域 - 优化 -->
+  <view class="location-area">
+    <view class="location-button {{isLoading ? 'disabled' : ''}}" bindtap="getUserLocation">
+      <view class="location-icon-wrap">
+        <image class="nav-icon" src="/images/location.png" mode="aspectFit"></image>
+      </view>
+      <text>{{userLocation ? '已获取位置' : '获取位置'}}</text>
     </view>
     
-    <view class="food-circle" animation="{{animationData}}" bindtap="startRandomize">
-      <block wx:if="{{currentFood}}">
-        <image 
-          class="food-image {{animationEnabled ? 'food-image-animation' : ''}}" 
-          src="{{currentFood.image}}" 
-          data-src="{{currentFood.image}}"
-          binderror="handleImageError" 
-          mode="aspectFit"
-        ></image>
-        <text class="food-name">{{currentFood.name}}</text>
+    <view class="radius-panel">
+      <view class="radius-header">
+        <text class="radius-title">搜索范围</text>
+        <text class="radius-value">{{searchRadius}}公里</text>
+      </view>
+      <view class="radius-slider-area">
+        <text class="radius-min">1km</text>
+        <slider class="radius-slider" bindchange="radiusChanged" min="1" max="10" value="{{searchRadius}}" activeColor="#07c160" block-size="28" block-color="#07c160" disabled="{{isLoading}}"></slider>
+        <text class="radius-max">10km</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 决定横幅(已禁用) -->
+  <!--
+  <view class="decision-banner {{showDecisionBanner ? 'show' : ''}}" wx:if="{{currentFood}}">
+    <text class="decision-text">今天就吃这个吧!</text>
+  </view>
+  -->
+  
+  <!-- 食物展示区域 -->
+  <view class="food-display">
+    <view class="food-circle {{isLoading ? 'loading' : ''}}" animation="{{animationData}}" bindtap="startRandomizeWithLocation">
+      <block wx:if="{{isLoading}}">
+        <view class="loading-spinner"></view>
+        <text class="loading-text">加载中...</text>
+      </block>
+      <block wx:elif="{{currentFood}}">
+        <view class="restaurant-image-container">
+          <image 
+            class="food-image {{animationEnabled ? 'food-image-animation' : ''}}" 
+            src="{{currentFood.image}}" 
+            data-src="{{currentFood.image}}"
+            binderror="handleImageError" 
+            mode="aspectFill"
+          ></image>
+        </view>
+        <view class="restaurant-card">
+          <text class="restaurant-name">{{currentFood.name}}</text>
+          
+          <view class="restaurant-details-panel" wx:if="{{currentFood.distance || currentFood.category || currentFood.rating || currentFood.address}}">
+            <!-- 评分和分类在一行 -->
+            <view class="restaurant-detail-row">
+              <view class="restaurant-detail-item rating" wx:if="{{currentFood.rating}}">
+                <image class="detail-icon" src="/images/star.png" mode="aspectFit"></image>
+                <text>{{currentFood.rating}}分</text>
+              </view>
+              <view class="restaurant-detail-item category" wx:if="{{currentFood.category}}">
+                <text>{{currentFood.category}}</text>
+              </view>
+            </view>
+            
+            <!-- 距离单独一行 -->
+            <view class="restaurant-detail-row" wx:if="{{currentFood.distance}}">
+              <view class="restaurant-detail-item distance">
+                <image class="detail-icon" src="/images/location.png" mode="aspectFit"></image>
+                <text>距离{{currentFood.distance}}公里</text>
+              </view>
+            </view>
+            
+            <!-- 地址单独一行，如果有 -->
+            <view class="restaurant-detail-row" wx:if="{{currentFood.address}}">
+              <view class="restaurant-detail-item address">
+                <image class="detail-icon" src="/images/address.png" mode="aspectFit"></image>
+                <text class="address-text">{{currentFood.address}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
       </block>
       <block wx:else>
-        <text class="placeholder-text">点我开始</text>
+        <text class="placeholder-text">点我随机附近餐厅</text>
       </block>
     </view>
   </view>
   
-  <!-- 操作按钮区域 - 按钮已移除 -->
-  <view class="action-area">
-    <!-- 随机选择按钮已移除，现在通过点击圆圈触发随机选择 -->
-    <!-- 历史记录按钮已移除，现在通过底部导航栏访问 -->
+  <!-- 操作提示区域 -->
+  <view class="action-tip" wx:if="{{currentFood && !isLoading}}">
+    <text>点击卡片可重新随机</text>
+  </view>
+  
+  <!-- 移至底部的自定义提示框 -->
+  <view class="custom-toast-container">
+    <view class="custom-toast {{showCustomToast ? 'show' : 'hide'}}">
+      <text>{{customToastText}}</text>
+    </view>
+  </view>
+
+  <!-- API密钥设置弹窗 - 保留但修改显示条件 -->
+  <view class="api-key-modal" wx:if="{{showApiKeyModal}}">
+    <view class="api-key-content">
+      <view class="api-key-title">设置高德地图API密钥</view>
+      <input class="api-key-input" value="{{tempApiKey}}" bindinput="onApiKeyInput" placeholder="请输入您的高德地图API密钥"/>
+      <view class="api-key-tip">请确保密钥已绑定微信小程序AppID</view>
+      <view class="api-key-buttons">
+        <button size="mini" type="default" bindtap="cancelApiKey">取消</button>
+        <button size="mini" type="primary" bindtap="saveApiKey">保存</button>
+      </view>
+    </view>
   </view>
 </view>

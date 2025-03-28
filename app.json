@@ -36,6 +36,14 @@
       }
     ]
   },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "需要获取您的地理位置，为您推荐附近的餐厅"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation"
+  ],
   "style": "v2",
   "sitemapLocation": "sitemap.json"
 }

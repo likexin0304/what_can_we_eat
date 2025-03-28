@@ -1,3 +1,6 @@
 {
-  "libVersion": "development"
+  "libVersion": "development",
+  "setting": {
+    "urlCheck": false
+  }
 }
